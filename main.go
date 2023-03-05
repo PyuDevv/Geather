@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"runtime"
 )
 
 func main() {
@@ -12,18 +11,15 @@ func main() {
 	var city string
 	fmt.Scanln(&city)
 
-	if runtime.GOOS == "windows" {
-		println("Incompatible with windows.")
+	out, err := exec.Command("curl", "wttr.in/"+city).Output()
+
+	if err != nil {
+		fmt.Println("Error:", err)
+		os.Exit(1)
 	} else {
-		out, err := exec.Command("curl", "wttr.in/"+city).Output()
+		output := string(out[:])
 
-		if err != nil {
-			fmt.Println("Error:", err)
-			os.Exit(1)
-		} else {
-			output := string(out[:])
-
-			fmt.Println(output)
-		}
+		fmt.Println(output)
 	}
+
 }
